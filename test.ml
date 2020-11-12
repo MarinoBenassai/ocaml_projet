@@ -1,5 +1,6 @@
 open Gfile
 open Tools
+open Graph
     
 let () =
 
@@ -25,6 +26,6 @@ let () =
   let graph = from_file infile in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile (Tools.clone_nodes graph) in
-
+  (*let () = write_file outfile (gmap (add_arc (gmap graph int_of_string) 1 2 15) string_of_int) in*)
+  let () = export_flowgraph outfile (to_flow_graph (to_int_graph graph) 0 4) in
   ()

@@ -1,5 +1,6 @@
 open Graph
 open Printf
+open Tools
     
 type path = string
 
@@ -98,4 +99,41 @@ let from_file path =
   
   close_in infile ;
   final_graph
+
+
+let export path g = 
+  let ff = open_out path in
+
+  (* Write in this file. *)
+  fprintf ff "digraph %s {\n" "my_graph" ;
+  fprintf ff "rankdir=\"LR\";\n";
+  fprintf ff "size=\"8,5\";\n";
+  fprintf ff "node [shape = circle];\n";
+
+
+  (* Write all arcs *)
+  e_iter g (fun id1 id2 lbl -> fprintf ff "%d -> %d [ label = \"%s\"];\n" id1 id2 lbl) ;
   
+  fprintf ff "}\n" ;
+  
+  close_out ff
+
+let export_flowgraph path g = 
+  let ff = open_out path in
+
+  (* Write in this file. *)
+  fprintf ff "digraph %s {\n" "my_graph" ;
+  fprintf ff "rankdir=\"LR\";\n";
+  fprintf ff "size=\"8,5\";\n";
+  fprintf ff "node [shape = circle];\n";
+
+
+  (* Write all arcs *)  
+  e_iter (graph_of_flowgraph g) (fun id1 id2 (a,b) -> fprintf ff "%d -> %d [ label = \"%d / %d\"];\n" id1 id2 a b) ;
+
+  fprintf ff "%d [fillcolor = \"green\", style=filled];\n" (start_of_flowgraph g);
+  fprintf ff "%d [fillcolor = \"red\", style=filled];\n" (end_of_flowgraph g);
+    
+  fprintf ff "}\n" ;
+  
+  close_out ff
