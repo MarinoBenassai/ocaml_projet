@@ -13,8 +13,14 @@ let add_arc g id1 id2 (weight:int) = match find_arc g id1 id2 with
   | Some a -> new_arc g id1 id2 (weight + a)
   | None ->  new_arc g id1 id2 weight;;
 
+let add_arc_flow (g, (s, e)) id1 id2 (weight:int) =  match find_arc g id1 id2 with
+  | Some (a,b) -> (new_arc g id1 id2 ((weight + a),b), (s, e))
+  | None ->  (new_arc g id1 id2 (weight, 0), (s, e));;
+
 let to_int_graph g = gmap g int_of_string;;
-let to_flow_graph (g: int graph) (s:int) (e:int) = (gmap g (fun x -> (0, x)), (s, e)) ;;
+let int_to_flow_graph (g: int graph) (s:int) (e:int) = (gmap g (fun x -> (0, x)), (s, e)) ;;
+
+let to_flow_graph (g: (int*int) graph) (s:int) (e:int) = (g, (s, e)) ;;
 
 let graph_of_flowgraph flow_graph = match flow_graph with
   | (a, _) -> a;;
