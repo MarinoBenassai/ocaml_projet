@@ -2,7 +2,9 @@ open Gfile
 open Tools
 open Graph
 open Ffa
-    
+
+let list_string l = String.concat ", " (List.map string_of_int l);;
+
 let () =
 
   (* Check the number of command-line arguments *)
@@ -29,6 +31,7 @@ let () =
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile (gmap (add_arc (gmap graph int_of_string) 1 2 15) string_of_int) in*)
   (*let () = export_flowgraph outfile (to_flow_graph (add_arc_flow (graph_of_flowgraph (int_to_flow_graph (to_int_graph graph) 0 4)) 3 1 4) 0 4) in*)
-  let fg = (add_arc_flow (int_to_flow_graph  (to_int_graph graph) 0 5) 0 2 8) in
-  let () = Printf.printf "%d" (bottleneck (path_dfs fg) (graph_of_flowgraph fg)) in
+  let fg = (int_to_flow_graph  (to_int_graph graph) 0 5)  in
+  (*let () = Printf.printf "%d" (bottleneck (path_dfs fg) (graph_of_flowgraph fg)) in*)
+  let () = Printf.printf "[%s]\n" (list_string (path_dfs fg)) in
   ()
