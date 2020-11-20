@@ -1,5 +1,6 @@
 open Tools;;
 open Graph;;
+open Gfile;;
 (* find augmenting path*)
 (* find bottleneck in path*)
 (* augment the graph by adding bottleneck to each arc of the path and subtracting from each opposite arc*)
@@ -8,33 +9,29 @@ open Graph;;
 let get_viable_successors g n = List.map (fun (a, b) -> a) (List.filter (fun (x, (a,b)) -> a < b) (out_arcs g n))
 
 let list_string l = String.concat ", " (List.map string_of_int l);;
-let path_dfs (graph, (start, stop)) = 
-  (*let start = start_of_flowgraph flow_g in
-  let end = end_of_flowgraph flow_g in
-  let graph = graph_of_flowgraph in*)
-  let rec path_dfs_rec visited_nodes node =
-    if (not (List.mem node visited_nodes)) && (not (List.mem stop visited_nodes)) then (* visited nodes = [0, 2] node = *)
-     begin
-      if (node == stop) then
-      begin
-        (stop::visited_nodes)
-      end
-      else
-      begin
-        Printf.printf "node is: %d  " node;
-        let successors = get_viable_successors graph node in
-        Printf.printf "Successors: %s\n"  (list_string successors);
-        Printf.printf "visited: %s\n"  (list_string visited_nodes);
-        if successors == [] then visited_nodes
-        else List.fold_left path_dfs_rec (node::visited_nodes) successors
-      end
-    end
-    else visited_nodes
 
-  in match (path_dfs_rec [] start) with
-  | [] -> []
-  | hd::tl -> if hd == stop then hd::tl else [];; (*return empty list if stop node is not last node*)
+let diff l1 l2 = List.filter (fun x -> not (List.mem x l2)) l1;;
 
+let path_dfs (graph, (start, stop)) =   
+  let stack = [start] in
+  let visited = [] in
+  let rec path_dfs_rec (graph, (start, stop)) stack visited path =
+    Printf.printf "stack: [%s]\n" (list_string stack);
+    match stack with
+      |[] -> []
+      |hd::tl -> let current_node = hd in
+        Printf.printf "current: %d\n" current_node ; 
+        if current_node == stop then ((Printf.printf "stop\n\n"); stop::path)
+        else if current_node == -1 then 
+          path_dfs_rec (graph, (start, stop)) tl visited (List.tl path)
+        else
+        let new_visited = current_node::visited in
+        let new_path = current_node::path in
+        let successors = diff (get_viable_successors graph current_node) new_visited in
+        if successors = [] then  path_dfs_rec (graph, (start, stop)) tl new_visited path
+        else let new_stack = List.concat [successors;[-1];tl] in
+        path_dfs_rec (graph, (start, stop)) new_stack new_visited new_path
+  in path_dfs_rec (graph, (start, stop)) stack visited []
 
 let bottleneck path (graph, (_, _)) = 
   let rec bottleneck_rec path graph current_bottleneck = match path with
@@ -45,17 +42,18 @@ let bottleneck path (graph, (_, _)) =
       | None -> failwith "Something is wrong in the path"
   in bottleneck_rec path graph max_int
 
-(*let rec augment_graph bottleneck path graph = match path with
+let rec augment_graph bottleneck path graph = match path with
   | [] -> graph
   | [a] -> graph
-  | a :: b :: c -> augment_graph bottleneck (b::c) (add_arc_flow (add_arc_flow graph a b bottleneck) b a (-1 * bottleneck))*)
+  | a :: b :: c -> augment_graph bottleneck (b::c) (add_arc_flow (add_arc_flow graph a b (-1* bottleneck)) b a (bottleneck))
   
-(*let rec ffa graph pathfinding = 
+let rec ffa graph pathfinding n = 
   let path = pathfinding graph in
   (*check whether it fails*)
   match path with
   | [] -> Printf.printf "End reached"; graph
   | p -> let current_bottleneck = bottleneck path graph in
-      Printf.printf "path: %s with bottleneck %d" list_string bottleneck;
-      ffa (augment_graph p graph) pathfinding
-    *)
+      Printf.printf "path: %s with bottleneck %d" (list_string p) current_bottleneck;
+      export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" n) graph ;
+      ffa (augment_graph current_bottleneck p graph) pathfinding (n+1);;
+    

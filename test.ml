@@ -32,6 +32,10 @@ let () =
   (*let () = write_file outfile (gmap (add_arc (gmap graph int_of_string) 1 2 15) string_of_int) in*)
   (*let () = export_flowgraph outfile (to_flow_graph (add_arc_flow (graph_of_flowgraph (int_to_flow_graph (to_int_graph graph) 0 4)) 3 1 4) 0 4) in*)
   let fg = (int_to_flow_graph  (to_int_graph graph) 0 5)  in
+  let fg_no = add_arc_flow fg 1 5 21 in
+  let fg_no_path = add_arc_flow fg_no 4 5 14 in
   (*let () = Printf.printf "%d" (bottleneck (path_dfs fg) (graph_of_flowgraph fg)) in*)
-  let () = Printf.printf "[%s]\n" (list_string (path_dfs fg)) in
+  (*let () = Printf.printf "[%s]\n" (list_string (path_dfs fg_no)); export_flowgraph outfile fg_no in*)
+  (*let () = Printf.printf "[%s]" (list_string (diff [1;2;3;4] [1;2;7;8])) in*)
+  let () = export_flowgraph "ffa/final_graph.dot" (ffa fg path_dfs 0) in
   ()
