@@ -2,8 +2,7 @@ open Tools
 open Graph
 open Hashtbl
 
-
-val ffa: flow_graph -> (flow_graph -> int list) -> int -> flow_graph
+val ffa: flow_graph -> (flow_graph -> int list) -> (flow_graph * int)
 val path_dfs: flow_graph -> int list
 val find_path_dfs: flow_graph -> int list
 val get_path: 'a -> 'a -> ('a, 'a) t-> 'a list
