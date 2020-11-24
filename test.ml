@@ -37,5 +37,5 @@ let () =
   (*let () = Printf.printf "%d" (bottleneck (path_dfs fg) (graph_of_flowgraph fg)) in*)
   (*let () = Printf.printf "[%s]\n" (list_string (path_dfs fg_no)); export_flowgraph outfile fg_no in*)
   (*let () = Printf.printf "[%s]" (list_string (diff [1;2;3;4] [1;2;7;8])) in*)
-  let () = export_flowgraph "ffa/final_graph.dot" (ffa fg path_dfs 0) in
+  let () = export_flowgraph "ffa/finalgraph.dot" (ffa fg find_path_dfs 0) in
   ()

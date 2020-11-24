@@ -123,7 +123,6 @@ let export_flowgraph path g =
   (* Write in this file. *)
   fprintf ff "digraph %s {\n" "my_graph" ;
   fprintf ff "rankdir=\"LR\";\n";
-  fprintf ff "size=\"8,5\";\n";
   fprintf ff "node [shape = circle];\n";
 
 

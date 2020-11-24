@@ -37,7 +37,7 @@ let bottleneck path (graph, (_, _)) =
   let rec bottleneck_rec path graph current_bottleneck = match path with
   | [x] -> current_bottleneck
   | [] -> current_bottleneck
-  | x :: y :: tail -> match (find_arc graph y x)  with
+  | x :: y :: tail -> match (find_arc graph x y)  with
       | Some (a,b) -> bottleneck_rec (y::tail) graph (min (b-a) current_bottleneck)
       | None -> failwith "Something is wrong in the path"
   in bottleneck_rec path graph max_int
@@ -45,15 +45,55 @@ let bottleneck path (graph, (_, _)) =
 let rec augment_graph bottleneck path graph = match path with
   | [] -> graph
   | [a] -> graph
-  | a :: b :: c -> augment_graph bottleneck (b::c) (add_arc_flow (add_arc_flow graph a b (-1* bottleneck)) b a (bottleneck))
+  | a :: b :: c -> augment_graph bottleneck (b::c) (add_arc_flow (add_arc_flow graph a b (bottleneck)) b a (-1 * bottleneck))
+
+let choose_arc g id1 id2 w  = match w with
+  |(_,0) -> g
+  |_,_ -> new_arc g id1 id2 w;;
+
+let clean_graph (g,(s,e))= (e_fold g choose_arc (clone_nodes g), (s,e));;
+
+
   
 let rec ffa graph pathfinding n = 
   let path = pathfinding graph in
   (*check whether it fails*)
   match path with
-  | [] -> Printf.printf "End reached"; graph
+  | [] -> Printf.printf "End reached"; (clean_graph graph)
   | p -> let current_bottleneck = bottleneck path graph in
-      Printf.printf "path: %s with bottleneck %d" (list_string p) current_bottleneck;
-      export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" n) graph ;
+      Printf.printf "path: %s with bottleneck %d\n" (list_string p) current_bottleneck;
+      export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" n) (clean_graph graph);
       ffa (augment_graph current_bottleneck p graph) pathfinding (n+1);;
-    
+
+let get_path start stop htable =
+  let rec get_path_rec start stop htable path =
+    let previous_node = List.hd path in
+    let next_node = 
+      try Hashtbl.find htable (previous_node)
+      with Not_found -> previous_node 
+    in if next_node == start then next_node::path
+    else if next_node == previous_node then []
+    else get_path_rec start stop htable (next_node::path)
+  in get_path_rec start stop htable [stop]
+      
+let htable_add htable x y = Hashtbl.add htable y x
+
+let rec find_path_dfs  (graph, (start, stop)) =
+  let stack = [start] in
+  let visited = [] in
+  let htable = Hashtbl.create 100 in
+  let rec find_path_dfs_rec (graph, (start, stop)) stack visited htabl =
+    Printf.printf "stack: [%s]\n" (list_string stack);
+    match stack with
+      |[] -> []
+      |hd::tl -> if hd == stop then (Printf.printf "path: [%s]\n" (list_string (get_path start stop htabl));
+      get_path start stop htabl)
+      else let current_node = hd in
+        Printf.printf "current: %d\n" current_node ;
+        let new_visited = current_node::visited in
+        let successors = diff (get_viable_successors graph current_node) new_visited in
+        List.iter (htable_add htable current_node) successors;
+        let new_stack = List.concat [successors;tl] in
+        find_path_dfs_rec (graph, (start, stop)) new_stack new_visited htable
+  in find_path_dfs_rec (graph, (start, stop)) stack visited htable;;
+        
