@@ -36,10 +36,13 @@ for t in trainer_name_reader:
 f3.close()
 selected_trainers = random.sample(trainer_names, k=num_trainers)
 
+ids = list(range(num_trainers))
+random.shuffle(ids)
+
 f4 = open(trainer_file, 'w')
 trainer_writer = csv.writer(f4)
 for i, trainer in enumerate(selected_trainers):
-    row = [i, trainer[0]]
+    row = [ids[i], trainer[0]]
     for k in range(3):
         row.append(random.choice(types))
     trainer_writer.writerow(row)

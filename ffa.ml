@@ -58,10 +58,10 @@ let ffa graph pathfinding =
     let path = pathfinding graph in
     (*check whether it fails*)
     match path with
-    | [] -> Printf.printf "End reached"; ((clean_graph graph), flow)
+    | [] -> ((clean_graph graph), flow)
     | p -> let current_bottleneck = bottleneck path graph in
-        Printf.printf "path: %s with bottleneck %d\n" (list_string p) current_bottleneck;
-        export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" flow) (clean_graph graph);
+        (*Printf.printf "path: %s with bottleneck %d\n" (list_string p) current_bottleneck;*)
+        (*export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" flow) (clean_graph graph);*)
         ffa_rec (augment_graph current_bottleneck p graph) pathfinding (flow+current_bottleneck) in
     ffa_rec graph pathfinding 0;;
 
@@ -83,13 +83,10 @@ let rec find_path_dfs  (graph, (start, stop)) =
   let visited = [start] in
   let htable = Hashtbl.create 100 in
   let rec find_path_dfs_rec (graph, (start, stop)) stack visited htabl =
-    Printf.printf "stack: [%s]\n" (list_string stack);
     match stack with
       |[] -> []
-      |hd::tl -> if hd == stop then (Printf.printf "path: [%s]\n" (list_string (get_path start stop htabl));
-      get_path start stop htabl)
+      |hd::tl -> if hd == stop then get_path start stop htabl
       else let current_node = hd in
-        Printf.printf "current: %d\n" current_node ;
         let successors = diff (get_viable_successors graph current_node) visited in
         List.iter (htable_add htable current_node) successors;
         let new_stack = List.concat [successors;tl] in
