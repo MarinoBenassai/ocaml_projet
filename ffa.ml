@@ -52,18 +52,18 @@ let choose_arc g id1 id2 w  = match w with
   |_,_ -> new_arc g id1 id2 w;;
 
 let clean_graph (g,(s,e))= (e_fold g choose_arc (clone_nodes g), (s,e));;
-
-
   
-let rec ffa graph pathfinding n = 
-  let path = pathfinding graph in
-  (*check whether it fails*)
-  match path with
-  | [] -> Printf.printf "End reached"; (clean_graph graph)
-  | p -> let current_bottleneck = bottleneck path graph in
-      Printf.printf "path: %s with bottleneck %d\n" (list_string p) current_bottleneck;
-      export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" n) (clean_graph graph);
-      ffa (augment_graph current_bottleneck p graph) pathfinding (n+1);;
+let ffa graph pathfinding =
+  let rec ffa_rec graph pathfinding flow =
+    let path = pathfinding graph in
+    (*check whether it fails*)
+    match path with
+    | [] -> Printf.printf "End reached"; ((clean_graph graph), flow)
+    | p -> let current_bottleneck = bottleneck path graph in
+        Printf.printf "path: %s with bottleneck %d\n" (list_string p) current_bottleneck;
+        export_flowgraph (Printf.sprintf "ffa/ffa%d.dot" flow) (clean_graph graph);
+        ffa_rec (augment_graph current_bottleneck p graph) pathfinding (flow+current_bottleneck) in
+    ffa_rec graph pathfinding 0;;
 
 let get_path start stop htable =
   let rec get_path_rec start stop htable path =
