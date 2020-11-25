@@ -80,7 +80,7 @@ let htable_add htable x y = Hashtbl.add htable y x
 
 let rec find_path_dfs  (graph, (start, stop)) =
   let stack = [start] in
-  let visited = [] in
+  let visited = [start] in
   let htable = Hashtbl.create 100 in
   let rec find_path_dfs_rec (graph, (start, stop)) stack visited htabl =
     Printf.printf "stack: [%s]\n" (list_string stack);
@@ -90,10 +90,10 @@ let rec find_path_dfs  (graph, (start, stop)) =
       get_path start stop htabl)
       else let current_node = hd in
         Printf.printf "current: %d\n" current_node ;
-        let new_visited = current_node::visited in
-        let successors = diff (get_viable_successors graph current_node) new_visited in
+        let successors = diff (get_viable_successors graph current_node) visited in
         List.iter (htable_add htable current_node) successors;
         let new_stack = List.concat [successors;tl] in
+        let new_visited = List.concat [successors;visited] in
         find_path_dfs_rec (graph, (start, stop)) new_stack new_visited htable
   in find_path_dfs_rec (graph, (start, stop)) stack visited htable;;
         
