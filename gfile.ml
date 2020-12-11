@@ -1,6 +1,7 @@
 open Graph
 open Printf
 open Tools
+
     
 type path = string
 
@@ -135,3 +136,20 @@ let export_flowgraph path g =
   fprintf ff "}\n" ;
   
   close_out ff
+
+  let export_weighted_flowgraph path (g, (start, stop)) =
+    let ff = open_out path in
+
+    (* Write in this file. *)
+    fprintf ff "digraph %s {\n" "my_graph" ;
+    fprintf ff "rankdir=\"LR\";\n";
+    fprintf ff "node [shape = circle];\n";
+  
+  
+    (* Write all arcs *)  
+    e_iter g (fun id1 id2 (a,b,c) -> fprintf ff "%d -> %d [ label = \"%d / %d (%d)\"];\n" id1 id2 a b c) ;
+  
+    fprintf ff "%d [fillcolor = \"green\", style=filled];\n" start;
+    fprintf ff "%d [fillcolor = \"red\", style=filled];\n" stop;
+      
+    fprintf ff "}\n" ;

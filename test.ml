@@ -2,6 +2,7 @@ open Gfile
 open Tools
 open Graph
 open Ffa
+open Maxmin
 
 let list_string l = String.concat ", " (List.map string_of_int l);;
 
@@ -34,8 +35,13 @@ let () =
   let fg = (int_to_flow_graph  (to_int_graph graph) 0 5)  in
   let fg_no = add_arc_flow fg 1 5 21 in
   let fg_no_path = add_arc_flow fg_no 4 5 14 in
+  let wfg = to_weighted_flow_graph fg in
   (*let () = Printf.printf "%d" (bottleneck (path_dfs fg) (graph_of_flowgraph fg)) in*)
   (*let () = Printf.printf "[%s]\n" (list_string (path_dfs fg_no)); export_flowgraph outfile fg_no in*)
   (*let () = Printf.printf "[%s]" (list_string (diff [1;2;3;4] [1;2;7;8])) in*)
-  let () = export_flowgraph "ffa/finalgraph.dot" (ffa fg find_path_dfs 0) in
+  let wfg = set_weight wfg 0 1 10 in
+  let wfg,_,_ = max_min wfg in
+  let () = export_weighted_flowgraph "ffa/finalgraph.dot" wfg in
+
+
   ()
