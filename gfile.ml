@@ -130,6 +130,7 @@ let export_flowgraph path g =
   (* Write all arcs *)  
   e_iter (graph_of_flowgraph g) (fun id1 id2 (a,b) -> fprintf ff "%d -> %d [ label = \"%d / %d\"];\n" id1 id2 a b) ;
 
+  (* Color the starting and ending node of the flow graph*)
   fprintf ff "%d [fillcolor = \"green\", style=filled];\n" (start_of_flowgraph g);
   fprintf ff "%d [fillcolor = \"red\", style=filled];\n" (end_of_flowgraph g);
     
@@ -149,6 +150,7 @@ let export_flowgraph path g =
     (* Write all arcs *)  
     e_iter g (fun id1 id2 (a,b,c) -> fprintf ff "%d -> %d [ label = \"%d / %d (%d)\"];\n" id1 id2 a b c) ;
   
+    (* Color the starting and ending node of the flow graph*)
     fprintf ff "%d [fillcolor = \"green\", style=filled];\n" start;
     fprintf ff "%d [fillcolor = \"red\", style=filled];\n" stop;
       

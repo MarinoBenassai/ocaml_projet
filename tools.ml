@@ -22,11 +22,9 @@ let add_arc_weight (g, (s, e)) id1 id2 (value:int) weight =  match find_arc g id
 | Some (a,b,c) -> (new_arc g id1 id2 ((value + a),b,c), (s, e))
 | None ->  (new_arc g id1 id2 (value, 0, weight), (s, e));;
 
-
 let to_int_graph g = gmap g int_of_string;;
-let int_to_flow_graph (g: int graph) (s:int) (e:int) = (gmap g (fun x -> (0, x)), (s, e)) ;;
 
-let to_flow_graph (g: (int*int) graph) (s:int) (e:int) = (g, (s, e)) ;;
+let int_to_flow_graph (g: int graph) (s:int) (e:int) = (gmap g (fun x -> (0, x)), (s, e)) ;;
 
 let graph_of_flowgraph flow_graph = match flow_graph with
   | (a, _) -> a;;
@@ -37,14 +35,20 @@ let start_of_flowgraph flow_graph = match flow_graph with
 let end_of_flowgraph flow_graph = match flow_graph with
   | (_, (_,a)) -> a;;
 
-let to_weighted_flow_graph (graph, (start, stop)) = (gmap graph (fun (x,y) -> (x,y,1))), (start, stop);;
-
-let del_weigths (graph, (start, stop)) = gmap graph (fun (x,y,z) -> (x,y)) , (start, stop);;
+let to_weighted_flow_graph (graph, (start, stop)) = (gmap graph (fun (x,y) -> (x,y,0))), (start, stop);;
 
 let get_weight (graph, (start, stop)) id1 id2 = match (find_arc graph id1 id2)  with
 | Some (a,b,c) -> c
-| None -> failwith "This arc does not exist\n"
+| None -> failwith "This arc does not exist\n";;
   
 let set_weight (graph, (start, stop)) id1 id2 weight = match find_arc graph id1 id2 with
 | Some (a,b,c) -> (new_arc graph id1 id2 (a,b,weight), (start, stop))
 | None ->  (graph, (start, stop));;
+
+let graph_of_weighted_flowgraph flow_graph = match flow_graph with
+  | (a, _) -> a;;
+
+(*Only add an arc if it does not already exist*)
+let create_arc graph id1 id2 lbl = match find_arc graph id1 id2 with
+  |None -> new_arc graph id1 id2 lbl
+  |Some _ -> graph;;

@@ -31,7 +31,6 @@ let () =
 
   (* Rewrite the graph that has been read. *)
   (*let () = write_file outfile (gmap (add_arc (gmap graph int_of_string) 1 2 15) string_of_int) in*)
-  (*let () = export_flowgraph outfile (to_flow_graph (add_arc_flow (graph_of_flowgraph (int_to_flow_graph (to_int_graph graph) 0 4)) 3 1 4) 0 4) in*)
   let fg = (int_to_flow_graph  (to_int_graph graph) 0 5)  in
   let fg_no = add_arc_flow fg 1 5 21 in
   let fg_no_path = add_arc_flow fg_no 4 5 14 in
@@ -41,7 +40,7 @@ let () =
   (*let () = Printf.printf "[%s]" (list_string (diff [1;2;3;4] [1;2;7;8])) in*)
   let wfg = set_weight wfg 0 1 10 in
   let wfg,_,_ = max_min wfg in
-  let () = export_weighted_flowgraph "ffa/finalgraph.dot" wfg in
+  let () = export_weighted_flowgraph "ffa/finalgraph.dot" (clean_weighted_graph wfg) in
 
 
   ()
