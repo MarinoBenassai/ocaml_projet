@@ -22,8 +22,8 @@ let new_arc_to_sink g csv_line =
 
 let match_trainer_pokemon trainer pokemon = 
   let trainer_prefered_types = [(List.nth trainer 2);(List.nth trainer 3);(List.nth trainer 4)] in
-  (List.mem (List.nth pokemon 3) trainer_prefered_types) || 
-  (List.mem (List.nth pokemon 4) trainer_prefered_types);;
+  (List.mem (List.nth pokemon 2) trainer_prefered_types) || 
+  (List.mem (List.nth pokemon 3) trainer_prefered_types);;
 
 let csv_line_to_node_id is_trainer line =
   let off = if is_trainer then offset else 0 in

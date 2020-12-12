@@ -27,8 +27,8 @@ let csv_line_to_node_id is_trainer line =
 
 let match_trainer_pokemon_rank trainer rank pokemon =
   let trainer_prefered_type = List.nth trainer (2 + rank) in
-    ((List.nth pokemon 3) = trainer_prefered_type) || 
-    ((List.nth pokemon 4) = trainer_prefered_type);;
+    ((List.nth pokemon 2) = trainer_prefered_type) || 
+    ((List.nth pokemon 3) = trainer_prefered_type);;
 
 let add_weighted_arcs_to_one_trainer pokemon graph trainer =
   let rec add_weighted_arcs_to_one_trainer_rec pokemon graph trainer rank =
