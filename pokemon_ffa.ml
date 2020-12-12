@@ -22,7 +22,7 @@ let new_arc_to_sink g csv_line =
 
 (*Return true if the trainer and the pokemon are compatible, false otherwise*)
 let match_trainer_pokemon trainer pokemon = 
-  let trainer_prefered_types = [(List.nth trainer 2);(List.nth trainer 3);(List.nth trainer 4)] in
+  let trainer_prefered_types = List.tl (List.tl trainer) in
   (List.mem (List.nth pokemon 2) trainer_prefered_types) || 
   (List.mem (List.nth pokemon 3) trainer_prefered_types);;
 

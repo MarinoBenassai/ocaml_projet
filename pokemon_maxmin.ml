@@ -35,12 +35,14 @@ let match_trainer_pokemon_rank trainer rank pokemon =
 a weight for each arc orresponding to the trainer's preferences*)    
 let add_weighted_arcs_to_one_trainer pokemon graph trainer =
   let rec add_weighted_arcs_to_one_trainer_rec pokemon graph trainer rank =
-    let filtered_pokemon = List.filter (match_trainer_pokemon_rank trainer rank) pokemon in
-    let filtered_pokemon_id = List.map (csv_line_to_node_id false) filtered_pokemon in
-    let trainer_id = csv_line_to_node_id true trainer in 
-    let new_graph = List.fold_left (fun graph to_node -> create_arc graph trainer_id to_node (0,1,rank)) graph filtered_pokemon_id in
-    if rank == 2 then new_graph
-    else add_weighted_arcs_to_one_trainer_rec pokemon new_graph trainer (rank + 1)
+    if rank < (List.length trainer) - 2 then
+      let filtered_pokemon = List.filter (match_trainer_pokemon_rank trainer rank) pokemon in
+      let filtered_pokemon_id = List.map (csv_line_to_node_id false) filtered_pokemon in
+      let trainer_id = csv_line_to_node_id true trainer in 
+      let new_graph = List.fold_left (fun graph to_node -> create_arc graph trainer_id to_node (0,1,rank)) graph filtered_pokemon_id in
+      add_weighted_arcs_to_one_trainer_rec pokemon new_graph trainer (rank + 1)
+    else 
+      graph
   in add_weighted_arcs_to_one_trainer_rec pokemon graph trainer 0;;
 
 

@@ -7,7 +7,7 @@ In this project the Ford-Fulkerson Algorithm (FFA) or the Max-Flow Min-Cost Algo
 Available Pokemon and adventure hungry pokemon trainers are stored in the csv format.
 
 Trainers:
-| ID | Name | TypePreference1 | TypePreference1 | TypePreference1 |
+| ID | Name | TypePreference1 | TypePreference2 | TypePreference3 |
 |----|------|-----------------|-----------------|-----------------|
 | 1  | Ash  | Electric        | Fire            | Water           |
 
