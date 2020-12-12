@@ -62,7 +62,8 @@ let get_info path (graph, (_, _)) =
       | None -> failwith "Something is wrong in the path"
   in get_info_rec path graph max_int 0
 
-(*Updates the values of the flow along the path by adding bottleneck to it*)
+(*Updates the values of the flow along the path by adding bottleneck to the current flow of 
+each arc, and creating the backward edges*)
 let rec update_graph bottleneck path graph = match path with
 | [] -> graph
 | [a] -> graph

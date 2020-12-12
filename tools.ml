@@ -48,7 +48,6 @@ let set_weight (graph, (start, stop)) id1 id2 weight = match find_arc graph id1 
 let graph_of_weighted_flowgraph flow_graph = match flow_graph with
   | (a, _) -> a;;
 
-(*Only add an arc if it does not already exist*)
 let create_arc graph id1 id2 lbl = match find_arc graph id1 id2 with
   |None -> new_arc graph id1 id2 lbl
   |Some _ -> graph;;

@@ -58,7 +58,7 @@ or for example
 
 ```./pokemon_maxmin.native pokemon_match/test1_pokemon.csv pokemon_match/test1_trainer.csv outgraph.dot results.txt```
 
-The results.txt file will will contain what pokemon is matched to each trainer. While an optimal solution is found, not all trainers may get a pokemon :(
+The results.txt file will contain what pokemon is matched to each trainer. While an optimal solution is found, not all trainers may get a pokemon :(
 
 To view the output graph you can use
 ```dot -Tsvg outgraph.dot > outgraph.svg```

@@ -25,11 +25,14 @@ let csv_line_to_node_id is_trainer line =
   let off = if is_trainer then offset else 0 in
   (int_of_string (List.hd line)) + off;;
 
+(*Returns true if the pokemon is of the type choosen by the trainer in position rank*)
 let match_trainer_pokemon_rank trainer rank pokemon =
   let trainer_prefered_type = List.nth trainer (2 + rank) in
     ((List.nth pokemon 2) = trainer_prefered_type) || 
     ((List.nth pokemon 3) = trainer_prefered_type);;
 
+(*Add the arcs between a trainer node and the nodes of the pokemons compatible, and choose
+a weight for each arc orresponding to the trainer's preferences*)    
 let add_weighted_arcs_to_one_trainer pokemon graph trainer =
   let rec add_weighted_arcs_to_one_trainer_rec pokemon graph trainer rank =
     let filtered_pokemon = List.filter (match_trainer_pokemon_rank trainer rank) pokemon in

@@ -37,15 +37,16 @@ val start_of_flowgraph: flow_graph -> int
 (* returns the graph component of a flow_graph *)
 val end_of_flowgraph: flow_graph -> int
 
-(* converts a flow graph to a weighted flow graph, by giving each arc a weight of 0*)
+(* converts a flow graph to a weighted flow graph, by giving each arc a weight/cost of 0*)
 val to_weighted_flow_graph : flow_graph -> weighted_flow_graph
 
+(* changes the weight/cost of an arc*)
 val set_weight:  weighted_flow_graph -> int -> int -> int -> weighted_flow_graph
 
-(* returns the weight associated to an arc in a weighted flow graph*)
+(* returns the weight/cost associated to an arc in a weighted flow graph*)
 val get_weight: weighted_flow_graph -> id -> id -> int
 
-(* add an arc to a graph only if that arc do not already exists*)
+(* adds an arc to a graph only if that arc do not already exists*)
 val create_arc: 'a graph -> id -> id -> 'a -> 'a graph
 
 (* returns the graph component of a weighted flow_graph *)

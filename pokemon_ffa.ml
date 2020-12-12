@@ -20,6 +20,7 @@ let new_arc_to_sink g csv_line =
   let id = int_of_string (List.hd csv_line) in
   new_arc g id (-2) 1;;
 
+(*Return true if the trainer and the pokemon are compatible, false otherwise*)
 let match_trainer_pokemon trainer pokemon = 
   let trainer_prefered_types = [(List.nth trainer 2);(List.nth trainer 3);(List.nth trainer 4)] in
   (List.mem (List.nth pokemon 2) trainer_prefered_types) || 
@@ -29,6 +30,7 @@ let csv_line_to_node_id is_trainer line =
   let off = if is_trainer then offset else 0 in
   (int_of_string (List.hd line)) + off;;
 
+(*Add the arcs between a trainer node and the nodes of the pokemons compatible*)
 let add_arcs_to_one_trainer pokemon graph trainer  = 
   let filtered_pokemon = List.filter (match_trainer_pokemon trainer) pokemon in
   let filtered_pokemon_id = List.map (csv_line_to_node_id false) filtered_pokemon in
